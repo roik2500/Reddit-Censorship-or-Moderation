@@ -3,7 +3,7 @@ class Topic_Model:
     def __init__(self, data):
         self.data = data
 
-    def get_topic_model(self, **wrags):
+    def get_topic_model(self, **kwargs):
         pass
 
     def fit(self, documents):
@@ -18,5 +18,5 @@ class Topic_Model:
     def save_model(self, path):
         pass
 
-    def create_model(self, **wrags):
+    def create_model(self, **kwargs):
         pass
