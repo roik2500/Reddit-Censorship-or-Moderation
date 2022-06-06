@@ -154,14 +154,14 @@ df[emotion.columns] = emotion
 
 # sentiment
 sentiment = bert_tweet_base_model(32, 'sentiment', df[text])
-df[["bertweet_neg", "bertweet_neg", "bertweet_pos"]] = sentiment.loc[:, 0:3]
+df[["bertweet_neg", "bertweet_neu", "bertweet_pos"]] = sentiment.loc[:, 0:3]
 
 # hate
 hate = bert_tweet_base_model(32, 'hate', df[text])
 df[["not_hate", "hate"]] = hate.loc[:, 0:2]
 
 # offensive
-hate = bert_tweet_base_model(32, 'offensive', df[text])
+offensive = bert_tweet_base_model(32, 'offensive', df[text])
 df[["not_offensive", "offensive"]] = hate.loc[:, 0:2]
 
 # merge

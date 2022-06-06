@@ -41,7 +41,7 @@ class Topic_Model_LDA(Topic_model.Topic_Model):
         self.model.fit(data_vectorized)
 
     def transform(self, documents):
-        lda_output = self.model.fit_transform(data_vectorized)
+        lda_output = self.model.fit_transform(self.vectorizer)
         # column names
         topicnames = ["Topic" + str(i) for i in range(best_lda_model.n_topics)]
 
@@ -62,7 +62,7 @@ class Topic_Model_LDA(Topic_model.Topic_Model):
             top_keyword_locs = (-topic_weights).argsort()[:n_words]
             topic_keywords.append(keywords.take(top_keyword_locs))
 
-        df_document_topic['dominant_topic'] = dominant_topic
+        df_document_topic['Topic'] = dominant_topic
         df_document_topic['probs'] = dominant_topic_probs
         df_document_topic['keywords'] = topic_keywords
         return df_document_topic
