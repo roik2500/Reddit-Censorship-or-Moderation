@@ -67,12 +67,9 @@ class Topic_Model_LDA(Topic_model.Topic_Model):
         df_document_topic['keywords'] = topic_keywords
         return df_document_topic
 
-
-
     def fit_transform(self, documents, **kwargs):
         self.fit(documents, **kwargs)
         return self.transform(documents)
-
 
     def save_model(self, path):
         pass

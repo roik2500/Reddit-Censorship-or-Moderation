@@ -2,8 +2,10 @@ from pathlib import Path
 import time
 import os
 from Optimization.Optimization import Optimization
+
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import torch
+
 torch.cuda.is_available()
 import pandas as pd
 import pickle
@@ -19,7 +21,7 @@ import sys
 import Topic_model
 
 
-class Create_Model(Topic_model.Topic_Model):
+class Bert_Model(Topic_model.Topic_Model):
 
     def __init__(self, data):
         Topic_model.__init__(self)
