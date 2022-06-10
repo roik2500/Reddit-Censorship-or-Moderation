@@ -24,9 +24,9 @@ import Topic_model
 class Bert_Model(Topic_model.Topic_Model):
 
     def __init__(self, data):
-        Topic_model.__init__(self)
+        Topic_model.__init__(self,data)
         self.model = None
-        self.data = None
+        self.data = data
         self.optimize = None
 
     def optimize(self, data):
@@ -88,3 +88,8 @@ class Bert_Model(Topic_model.Topic_Model):
         topics, probs = self.model.fit_transform(text_lst)
         self.update_data_topic_prob(topics=topics, probs=probs)
         return self.model
+
+    def get_data(self):
+        return self.data
+
+
