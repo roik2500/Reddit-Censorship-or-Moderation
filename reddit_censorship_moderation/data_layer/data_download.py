@@ -32,7 +32,7 @@ def convert_time_format(comment_or_post):
 
 
 class data_download:
-    def __init__(self):
+    def __init__(self, data_layer):
         self.chunk_counter = None
         self.chunk_size = None
         self.curr_tmp_chunk = None
@@ -49,6 +49,32 @@ class data_download:
             check_for_async=False
         )
         self.download_func = {'post': self.pushift.search_submissions, 'comment': self.pushift.search_comments}
+        self.data_layer = data_layer
+
+    def define_status(self, p):
+        status = ''
+        try:
+            reddit_post = p["reddit_api"]  # ["post"]
+        except KeyError as e:
+            reddit_post = p["pushift_api"]
+        # if "bot_comment" in p:
+        #     status = "automod_filtered"
+        if not reddit_post["is_robot_indexable"]:
+            reddit_selftext = reddit_post["selftext"].lower()
+            if reddit_post["removed_by_category"] == "automod_filtered":
+                status = "automod_filtered"
+            elif reddit_selftext == "[removed]":
+                status = "removed"
+            elif reddit_selftext.__contains__("[removed]") and reddit_selftext.__contains__("poll"):
+                status = "poll"
+            elif reddit_post["removed_by_category"] in ["[deleted]", "[deleted by user]"] or reddit_selftext in [
+                "[deleted]", "[deleted by user]"]:
+                status = "deleted"
+            else:
+                status = "removed"
+        else:
+            status = "exist"
+        return status
 
     def handle_single_submission(self, sub, kind, _post_or_comment, pbar_):
         s_time = time.time()
@@ -85,6 +111,7 @@ class data_download:
             self.times_psaw[0] += (e_time - s_time)
             self.times_psaw[1] += 1
             if len(self.curr_tmp_chunk[post_id]) == 3:
+                self.define_status(self.chunk_counter[post_id])
                 self.chunk_counter[post_id] = self.curr_tmp_chunk[post_id].copy()
                 del self.curr_tmp_chunk[post_id]
                 self.chunk_counter -= 1
@@ -95,10 +122,11 @@ class data_download:
             start_time_dump = time.time()
             await self.dump_data()
             pbar_.reset()
-            logging.info("\nwrite to json time: {}.".format(time.time() - start_time_dump))
+            logging.info("\nwrite to db duration: {}.".format(time.time() - start_time_dump))
 
     def dump_data(self):
-        pass
+        self.data_layer.insert_many(self.curr_chunk.values())
+        self.curr_chunk = {}
 
     async def run(self, _submissions_list, _submissions_list_praw, _post_or_comment):
         with tqdm(total=max(len(_submissions_list), len(_submissions_list_praw))) as pbar:
@@ -109,49 +137,19 @@ class data_download:
                 *[self.handle_single_submission(submission, 'pushift_api', _post_or_comment, pbar) for submission in
                   _submissions_list])
 
-    def download_operate(self, subreddit_name, year, submission_kind_list, start_day=1, start_month=1, m_step=1, d_step=1, run_type='m'):
-        # args: 1: subredits_list, 2:year, 3: post_or_comment_lst(d), 4: start_day(d), 5: start_month(d), 6:env_num(d)
+    def download_subreddit(self, subreddit_name, year, submission_kind_list, start_day=1, start_month=1, m_step=1,
+                           d_step=1, run_type='m'):
 
-        data = {}
-        counter = 0
-
-        # parameters
-        # load_dotenv(f"../../code_shimon/.env{args[6]}")
-        # print(f"../../code_shimon/.env{args[6]}")
-        # data_layer = DataLayer(os.getenv("AUTH_DB"))
-        # if subreddit_name == 'update_all':
-        #     sub_reddits = [x.split('_')[0] for x in data_layer.get_db_collections_names(year)][::-1]
-        # else:
-        #     sub_reddits = args[1].split(',')
-        # post_or_comment_lst = args[3].split(',')
-        # # for month in tqdm(range(12, 13, 1)):
-        # # for day in tqdm(calendar.monthrange(year, month)):
-        # # logging.info("month: {}".format(month))
-        # for sub_reddit in sub_reddits:
-        #     print(sub_reddit)
         for sub_kind in submission_kind_list:
             logging.info(f"Downloading {sub_kind}s")
-            # TODO separate the data access
             # collection_name = f"{subreddit_name}_{sub_kind}"
-            # print(collection_name)
-            # mycol = data_layer.get_collection(year, subreddit_name, sub_kind)
-            # index_name = 'pid'
-            # if index_name not in mycol.index_information():
-            #     mycol.create_index([('post_id', 1)], name=index_name, unique=True)
+            mycol = self.data_layer.get_collection(year, subreddit_name, sub_kind)
+            index_name = 'pid'
+            if index_name not in mycol.index_information():
+                mycol.create_index([('post_id', 1)], name=index_name, unique=True)
             # file_name = "{}_{}_{}.json".format(collection_name, year, sub_kind)
-            # if args[1] == 'update_all' and year == 2022:
-            #     max_date = list(
-            #         mycol.find({}, {'reddit_api.created_utc': 1}).sort("reddit_api.created_utc.0", -1).limit(1))
-            #     print(max_date)
-            #     if len(max_date) > 0:
-            #         max_date = max_date[0]['reddit_api']['created_utc'][0]
-            #         start_month = int(max_date.split('-')[1])
-            #     else:
-            #         start_month = 1
-            # ########
-            # run_type = "monthly"
-            # if post_or_comment == "comment":
-            #     run_type = "dayly"
+            if sub_kind == "comment":
+                run_type = "d"
 
             for m in range(start_month, 13, m_step):
                 last_day_of_month = calendar.monthrange(year, m)[1]
@@ -160,7 +158,7 @@ class data_download:
                 if m == start_month:
                     first_day = start_day
                 for d in range(first_day, last_day_of_month + 1, d_step):
-                    loop = self.download(d, m, sub_kind, subreddit_name, year)
+                    loop = self.download(d, m, sub_kind, subreddit_name, year, last_day_of_month, run_type)
                     if run_type == "m":
                         break
             # empty chunk
@@ -173,8 +171,10 @@ class data_download:
         #     '=false')
         # add_status(client[f"reddit_{year}"], f"{subreddit_name}_post")
 
-    def download(self, d, m, year, sub_kind, subreddit_name):
+    def download(self, d, m, year, sub_kind, subreddit_name, last_day_of_month, run_type='m'):
         start_time = int(datetime.datetime(year, m, d, 0, 0).timestamp())
+        if run_type == "monthly":
+            d = last_day_of_month
         end_time = int(datetime.datetime(year, m, d, 23, 59).timestamp())
         logging.info(f"start date:{d}/{m}/{year}")
         submissions_list_psaw = []
@@ -196,7 +196,7 @@ class data_download:
             logging.warn(f"Error at {d}/{m}/{year}")
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.run(submissions_list_psaw, submissions_list_praw, sub_kind))
-        # asyncio.run(main(submissions_list, data, counter))
+        # asyncio.run(self.run(submissions_list_psaw, submissions_list_praw, sub_kind))
         if len(self.curr_tmp_chunk) > 0:
             self.curr_chunk.update(self.curr_tmp_chunk)
             self.curr_tmp_chunk = {}

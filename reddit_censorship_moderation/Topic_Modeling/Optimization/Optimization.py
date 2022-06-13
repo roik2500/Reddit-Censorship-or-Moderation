@@ -23,8 +23,8 @@ from gensim.models.coherencemodel import CoherenceModel
 import os
 from pathlib import Path
 
-nltk.download_operate('punkt')
-nltk.download_operate('wordnet')
+nltk.download('punkt')
+nltk.download('wordnet')
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
