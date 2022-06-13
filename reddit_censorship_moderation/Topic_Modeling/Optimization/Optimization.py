@@ -29,7 +29,6 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 class Optimization:
-
     def __init__(self, data):
         self.data = data
         # self.path_to_save_model = f"/home/roikreme/BertTopic/models/{subreddit}_{sub_kind}_{year}/"

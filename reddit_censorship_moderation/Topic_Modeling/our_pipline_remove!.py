@@ -61,6 +61,8 @@ class Create_Model:
         topics = [np.argmax(prob) if max(prob) >= probability_threshold else -1 for prob in probs]
         return topics
 
+    Reddit.extract_featurs(topic_modeling=[LDA()], haggingface_features=["GoEmotion", "BerTweetEmotion"], ner=True)
+
     def create_model(self):
         print("start creation the optimize model")
         text = "title_selftext"
