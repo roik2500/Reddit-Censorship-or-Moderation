@@ -161,9 +161,10 @@ class Features:
         if j_s != '':
             yield j_s
 
-    def get_features(self, lst_feature):
+    def get_features(self, lst_feature, ner=True):
         '''
         This function will extract features by user decision
+        :param ner: boolean name entity recognition
         :param lst_feature: sentiment offensive or hate, ner
         :return:
         '''
@@ -187,7 +188,7 @@ class Features:
         dff_agg.reset_index(inplace=True)
         self.data = pd.merge(original_df, dff_agg, left_on="post_id", right_on="post_id")
 
-        if 'ner' in lst_feature:
+        if ner:
             self.data["ner"] = self.extract_spacy_ner()
 
     # split text

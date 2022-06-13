@@ -22,7 +22,7 @@ import pathlib
 import Topic_model
 
 
-class Topic_Model_LDA(Topic_model.Topic_Model):
+class LDA(Topic_model.Topic_Model):
     def __init__(self, data):
         self.data = data
         self.model = None

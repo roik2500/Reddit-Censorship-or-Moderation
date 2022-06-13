@@ -21,7 +21,7 @@ import sys
 import Topic_model
 
 
-class Bert_Model(Topic_model.Topic_Model):
+class BertTopic(Topic_model.Topic_Model):
 
     def __init__(self, data):
         Topic_model.__init__(self,data)
