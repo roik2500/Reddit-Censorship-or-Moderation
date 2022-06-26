@@ -127,8 +127,35 @@ df["bertweet_pos"] = sent[:,2]
 
 3.Hate
 ```python
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-  
 tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
 model = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/bertweet-base-hate")
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+model = model.to(device)
+res = []
+for txt in tqdm(batches(df[text],32), total=len(df)//32):
+    res.append(get_sentiment(model,tokenizer, list(txt)))
+hate = torch.cat(res).cpu().numpy()
+df["not_hate"] = hate[:,0]
+df["hate"] = hate[:,1]
+```
+4.Offensive
+```python
+tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
+model = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/bertweet-base-offensive")
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+model = model.to(device)
+res = []
+for txt in tqdm(batches(df[text],32), total=len(df)//32):
+    res.append(get_sentiment(model,tokenizer, list(txt)))
+offensive = torch.cat(res).cpu().numpy()
+df["not_offensive"] = offensive[:,0]
+df["offensive"] = offensive[:,1]
+```
+5.SPACY - NER
+```python
+import spacy
+res = []
+for doc in tqdm(nlp.pipe(list(df[text]), disable=["tagger", "parser", "attribute_ruler", "lemmatizer"]), total=len(df)):
+    res.append([(ent.text, ent.label_) for ent in doc.ents])
+df["ner"] = res
 ```
