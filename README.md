@@ -1,17 +1,5 @@
-# ModerTool
 
-The ModerTool enables users to analyze posts from Reddit platform by using topic modeling technique(BertTopic and LDA).
-This tool It allows orderly reading of the data (posts) from Reddit using Pushshift.io and Reddit API.
-ModerTool allows to extract special features from post's text to use Machine Learning.
-## Features
-- Sentiment 
-- Offensive 
-- Hate
-- Ner
-- Emotion:  Anger ,Fear ,joy ,Sadness , Surprise and Natural
 
-## Installation
-    pip install ModerTool
     
 ## Embedding Models
 ModerTool contains many embedding models that can be used to anylsis the documents and words from Reddit platform:
@@ -93,4 +81,54 @@ Number Of Negihbor	Min Topic Size   Num of Topic	        c_npmi          c_uci  
 20	                200	                 37	        0.065220	-1.110054	-0.288773	0.635015
 15	                50	                 182	        0.019615	-2.310290	-0.996556	0.431170	
 15	                100	                 86	        0.018527	-2.374765	-0.718971	0.471135
+```
+## Features Features
+- Emotion:  Anger ,Fear ,joy ,Sadness , Surprise and Natural
+- Sentiment
+- Offensive 
+- Hate
+- Ner
+
+
+1. GoEmotion 
+```python
+from transformers import AutoTokenizer 
+tokenizer = AutoTokenizer.from_pretrained("monologg/bert-base-cased-goemotions-ekman")
+model = BertForMultiLabelClassification.from_pretrained("monologg/bert-base-cased-goemotions-ekman")
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+model = model.to(device)
+
+res = []
+for txt in tqdm(batches(df[text],32), total=len(df)//32):   
+    res.append(get_emotions(model,tokenizer, list(txt)))
+emo = torch.cat(res).cpu().numpy()
+for k, v in model.config.id2label.items():
+    df[v] = emo[:,k]
+
+```
+
+2.BertTweet - sentiment
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
+model = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/bertweet-base-sentiment")
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+model = model.to(device)
+
+res = []
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+for txt in tqdm(batches(df[text],32)):
+    res.append(get_sentiment(model,tokenizer, list(txt)))
+sent = torch.cat(res).cpu().numpy()
+df["bertweet_neg"] = sent[:,0]
+df["bertweet_neu"] = sent[:,1]
+df["bertweet_pos"] = sent[:,2]
+```
+
+3.Hate
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+  
+tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
+model = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/bertweet-base-hate")
 ```
