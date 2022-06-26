@@ -20,8 +20,10 @@ ModerTool contains many embedding models that can be used to anylsis the documen
 | Create BERTopic Modeling | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1mO6Zq1Skd_CMQ5UMDFdfmjTmsVyhBv3F?usp=sharing)  |
 | Read data from mongo | [plugins/dropbox/README.md][PlDb] |
 | Optimization of BertTopic Model | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1A3_2l42Td0Hg9U8kQKbS1Z798OIvvgKu?usp=sharing)  |
-| Extract Features | [plugins/googledrive/README.md][PlGd] |
+| Extract Features | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1PqCK3jLP6yLSXqBHv-MCjXK-V8S1IANz)  |
 | Vizualization | [plugins/onedrive/README.md][PlOd] |
+
+
 
 Optimization of BertTopic
 ```python
