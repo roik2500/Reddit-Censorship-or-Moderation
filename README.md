@@ -1,15 +1,11 @@
 ##                                Reddit-Censorship-or-Moderation
-
+In the project, we used the following methods of characterizing moderation, which combines a number of different NLP techniques for text analysis:
+(1) BertTopic - A tool that creates Topic models for each subreddit segmented into different topics.
+(2) Bertweet - The language model, trained over millions of tweets, which is able to assess hate, abuse, and sentiment (positive, negative, or neutral) within the text.
+(3) Go Emotion - A model trained on 58,000 comments from Reddit allows extraction of Ekman's 2 emotions.
+(4) spaCy NER - A tool for recognition of entities from text.
 
     
-## Embedding Models
-ModerTool contains many embedding models that can be used to anylsis the documents and words from Reddit platform:
-
-- BertTweet
-- BertTopic
-- LDA
-- GoEmotion
-
 ## The Method
 ![alt text](https://imgur.com/lGeX8yj.png)
 
@@ -85,7 +81,7 @@ Number Of Negihbor	Min Topic Size   Num of Topic	        c_npmi          c_uci  
 15	                50	                 182	        0.019615	-2.310290	-0.996556	0.431170	
 15	                100	                 86	        0.018527	-2.374765	-0.718971	0.471135
 ```
-## Features Features
+## Features Extraction
 - Emotion:  Anger ,Fear ,joy ,Sadness , Surprise and Natural
 - Sentiment
 - Offensive 
