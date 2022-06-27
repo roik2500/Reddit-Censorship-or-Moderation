@@ -1,12 +1,10 @@
 ## The Classiffier
-הסבר בכמה מילים 
-
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1_vOQ0QBDepiRg7pM2YDrIGL0hUgyARdJ) 
 
 
-SHAP model to explaine the model outpot.
-we using with SHAP to explain the prediction of our model by computing the contribution of each feature.
+SHAP model to explaine the model output.
+We used SHAP to explain and compute the contribution of each feature in our model.
 
 ```python
 def SHAP(model, k_features):
