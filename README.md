@@ -158,3 +158,11 @@ for doc in tqdm(nlp.pipe(list(df[text]), disable=["tagger", "parser", "attribute
     res.append([(ent.text, ent.label_) for ent in doc.ents])
 df["ner"] = res
 ```
+
+
+## Vizualization
+
+![alt text](https://i.postimg.cc/P5DDTjhM/Whats-App-Image-2022-06-27-at-18-58-35.jpg)
+
+
+![alt text](https://i.postimg.cc/9F64xnTw/Whats-App-Image-2022-06-27-at-19-00-18.jpg)
