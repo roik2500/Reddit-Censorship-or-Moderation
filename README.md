@@ -18,7 +18,7 @@ In the project, we used the following methods of characterizing moderation, whic
 | Read data from mongo | [plugins/dropbox/README.md][PlDb] |
 | Optimization of BertTopic Model | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1A3_2l42Td0Hg9U8kQKbS1Z798OIvvgKu?usp=sharing)  |
 | Extract Features | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1PqCK3jLP6yLSXqBHv-MCjXK-V8S1IANz)  |
-| Vizualization | [plugins/onedrive/README.md][PlOd] |
+| Vizualization | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1a-000bp33oCqFUbWV65W4llKqAPTnu7N?usp=sharing)  |
 
 
 
