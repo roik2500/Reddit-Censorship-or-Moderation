@@ -6,7 +6,7 @@
 
 
 SHAP model to explaine the model outpot.
-we using with SHARP to explain the prediction of our model by computing the contribution of each feature.
+we using with SHAP to explain the prediction of our model by computing the contribution of each feature.
 
 ```python
 def SHAP(model, k_features):
