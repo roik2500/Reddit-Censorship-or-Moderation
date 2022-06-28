@@ -158,12 +158,10 @@ for doc in tqdm(nlp.pipe(list(df[text]), disable=["tagger", "parser", "attribute
     res.append([(ent.text, ent.label_) for ent in doc.ents])
 df["ner"] = res
 ```
-
-
 ## Vizualization
-
-![alt text](https://i.postimg.cc/P5DDTjhM/Whats-App-Image-2022-06-27-at-18-58-35.jpg)
-
-![Example of Features analysis using Altair](https://user-images.githubusercontent.com/74155541/176166137-4b042f77-bb50-43a8-9bd6-f2ae70672f25.gif)
+### Compare emotion and sentiment by topics and entities
+![Example of Features analysis using Altair](https://user-images.githubusercontent.com/74155541/176169875-1ff9b5fe-4e58-4681-bd03-4561d43fb73d.gif)
+### Explore subreddit content and compare their features
+![Example 2 of Features analysis using Altair](https://user-images.githubusercontent.com/74155541/176166137-4b042f77-bb50-43a8-9bd6-f2ae70672f25.gif)
 
 
