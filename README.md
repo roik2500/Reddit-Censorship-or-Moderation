@@ -164,5 +164,6 @@ df["ner"] = res
 
 ![alt text](https://i.postimg.cc/P5DDTjhM/Whats-App-Image-2022-06-27-at-18-58-35.jpg)
 
+![Example of Features analysis using Altair](https://user-images.githubusercontent.com/74155541/176166137-4b042f77-bb50-43a8-9bd6-f2ae70672f25.gif)
 
-![alt text](https://i.postimg.cc/9F64xnTw/Whats-App-Image-2022-06-27-at-19-00-18.jpg)
+
