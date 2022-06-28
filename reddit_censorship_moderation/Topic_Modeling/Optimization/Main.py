@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.abspath('/dt/puzis/dt-reddit/project_code/Topic_Modeling/Optimization/'))
-from Optimization import Optimization
+from old_Optimization import Optimization
 
 if __name__ == '__main__':
 

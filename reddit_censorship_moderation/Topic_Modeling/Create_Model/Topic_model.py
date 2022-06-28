@@ -1,10 +1,20 @@
+import pandas as pd
+
+
 class Topic_Model:
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self):
+        self.__data = None
 
-    def get_topic_model(self, **kwargs):
+    @classmethod
+    def recommended_conf(cls):
         pass
+
+    def get_data(self):
+        return self.__data
+
+    def get_topic_model(self):
+        return self.model
 
     def fit(self, documents):
         pass
@@ -16,7 +26,4 @@ class Topic_Model:
         pass
 
     def save_model(self, path):
-        pass
-
-    def create_model(self, **kwargs):
         pass

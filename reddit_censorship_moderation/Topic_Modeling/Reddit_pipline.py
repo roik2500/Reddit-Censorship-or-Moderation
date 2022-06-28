@@ -12,13 +12,12 @@ class Reddit_pipline:
 
     def extract_features(self, topic_modeling=[LDA(), BertTopic()],
                          haggingface_features=["GoEmotion", "BerTweetEmotion"], ner=True):
-        '''
-
+        """
         :param topic_modeling:
         :param haggingface_features:
         :param ner:
         :return:
-        '''
+        """
         final_df = pd.DataFrame({})
         for model in topic_modeling:
             model.fit(self.data)

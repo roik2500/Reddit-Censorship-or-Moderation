@@ -23,30 +23,50 @@ import Topic_model
 
 
 class LDA(Topic_model.Topic_Model):
-    def __init__(self, data):
-        self.data = data
-        self.model = None
+    def __init__(self, **kwargs):
+        Topic_model.__init__(self)
+        self.model = LatentDirichletAllocation(**kwargs)
         self.vectorizer = None
 
+    @classmethod
+    def recommended_conf(cls, n_topics=20,  # Number of topics
+                         max_iter=10,  # Max learning iterations
+                         learning_method='online',
+                         random_state=100,  # Random state
+                         batch_size=128,  # n docs in each learning iter
+                         evaluate_every=-1,  # compute perplexity every n iters, default: Don't
+                         n_jobs=-1,  # Use all available CPUs
+                         ):
+        cls(n_topics=n_topics,
+            max_iter=max_iter,
+            learning_method=learning_method,
+            random_state=random_state,
+            batch_size=batch_size,
+            evaluate_every=evaluate_every,
+            n_jobs=n_jobs)
+
+    @classmethod
+    def create_vectorizer(cls, **kwargs):
+        return CountVectorizer(analyzer='word',
+                               min_df=10,
+                               stop_words='english',
+                               lowercase=True,
+                               token_pattern='[a-zA-Z0-9]{3,}',
+                               **kwargs)
+
     def fit(self, documents, **kwargs):
-        # vectorizer = CountVectorizer(analyzer='word',
-        #                              min_df=10,  # minimum reqd occurences of a word
-        #                              stop_words='english',  # remove stop words
-        #                              lowercase=True,  # convert all words to lowercase
-        #                              token_pattern='[a-zA-Z0-9]{3,}',  # num chars > 3
-        #                              # max_features=50000,             # max number of uniq words
-        #                              )
-        self.vectorizer = CountVectorizer(**kwargs)
+        self.vectorizer = LDA.create_vectorizer(**kwargs)
         data_vectorized = self.vectorizer.fit_transform(documents)
         self.model.fit(data_vectorized)
 
-    def transform(self, documents):
-        lda_output = self.model.fit_transform(self.vectorizer)
+    def transform(self, documents, n_words=20):
+        data_vectorized = self.vectorizer.fit_transform(documents)
+        lda_output = self.model.transform(data_vectorized)
         # column names
-        topicnames = ["Topic" + str(i) for i in range(best_lda_model.n_topics)]
+        topicnames = ["Topic" + str(i) for i in range(self.model.n_topics)]
 
         # index names
-        docnames = ["Doc" + str(i) for i in range(len(data))]
+        docnames = ["Doc" + str(i) for i in range(len(documents))]
 
         # Make the pandas dataframe
         df_document_topic = pd.DataFrame(np.round(lda_output, 2), columns=topicnames, index=docnames)
@@ -58,13 +78,13 @@ class LDA(Topic_model.Topic_Model):
         # Show top n keywords for each topic
         keywords = np.array(self.vectorizer.get_feature_names())
         topic_keywords = []
-        for topic_weights in lda_model.components_:
+        for topic_weights in self.model.components_:
             top_keyword_locs = (-topic_weights).argsort()[:n_words]
             topic_keywords.append(keywords.take(top_keyword_locs))
 
         df_document_topic['Topic'] = dominant_topic
         df_document_topic['probs'] = dominant_topic_probs
-        df_document_topic['keywords'] = topic_keywords
+        df_document_topic['topic_words'] = topic_keywords
         return df_document_topic
 
     def fit_transform(self, documents, **kwargs):
@@ -74,15 +94,15 @@ class LDA(Topic_model.Topic_Model):
     def save_model(self, path):
         pass
 
-    def create_model(self, **kwargs):
-        # Build LDA Model
-        lda_model = LatentDirichletAllocation(**kwargs)
-        self.model = lda_model
-        # lda_model = LatentDirichletAllocation(n_topics=20,  # Number of topics
-        #                                       max_iter=10,  # Max learning iterations
-        #                                       learning_method='online',
-        #                                       random_state=100,  # Random state
-        #                                       batch_size=128,  # n docs in each learning iter
-        #                                       evaluate_every=-1,  # compute perplexity every n iters, default: Don't
-        #                                       n_jobs=-1,  # Use all available CPUs
-        #                                       )
+    # def create_model(self, **kwargs):
+    #     # Build LDA Model
+    #     lda_model = LatentDirichletAllocation(**kwargs)
+    #     self.model = lda_model
+    #     # lda_model = LatentDirichletAllocation(n_topics=20,  # Number of topics
+    #     #                                       max_iter=10,  # Max learning iterations
+    #     #                                       learning_method='online',
+    #     #                                       random_state=100,  # Random state
+    #     #                                       batch_size=128,  # n docs in each learning iter
+    #     #                                       evaluate_every=-1,  # compute perplexity every n iters, default: Don't
+    #     #                                       n_jobs=-1,  # Use all available CPUs
+    #     #                                       )
