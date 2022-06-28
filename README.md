@@ -163,12 +163,7 @@ df["ner"] = res
 ## Vizualization
 
 ![alt text](https://i.postimg.cc/P5DDTjhM/Whats-App-Image-2022-06-27-at-18-58-35.jpg)
-```html
-<h2>Example of Features analysis using Altair</h2>
 
-<pre>
-<div style="height: 0; padding-bottom: calc(55.52%); position:relative; width: 100%;"><iframe allow="autoplay; gyroscope;" allowfullscreen height="100%" referrerpolicy="strict-origin" src="https://www.kapwing.com/e/62bada531dfc7d00d2a27aff?autoplay=true" style="border:0; height:100%; left:0; overflow:hidden; position:absolute; top:0; width:100%" title="Embedded content made on Kapwing" width="100%"></iframe></div><p style="font-size: 12px; text-align: right;">Video edited on <a href="https://www.kapwing.com/video-editor">Kapwing</a></p>
-</pre>
-```
+![Example of Features analysis using Altair](https://user-images.githubusercontent.com/74155541/176166137-4b042f77-bb50-43a8-9bd6-f2ae70672f25.gif)
 
 
